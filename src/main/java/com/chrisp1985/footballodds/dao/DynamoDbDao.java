@@ -1,24 +1,34 @@
 package com.chrisp1985.footballodds.dao;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
+import com.chrisp1985.footballodds.configuration.DynamoClientConfig;
 import com.chrisp1985.footballodds.dto.DynamoDb;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 
 @Slf4j
+@Repository
 public class DynamoDbDao implements StorageDao{
     private static final String DYNAMODB_TABLE_NAME = "FootballResults_tf";
 
-    public void add(DynamoDb classToAdd, AmazonDynamoDB client) {
+    private DynamoClientConfig dynamoClientConfig;
+
+    public DynamoDbDao(DynamoClientConfig dynamoClientConfig) {
+
+        this.dynamoClientConfig = dynamoClientConfig;
+
+    }
+
+    public void add(DynamoDb classToAdd) {
         try {
 
-            client.putItem(DYNAMODB_TABLE_NAME,
-                    new DynamoDBMapper(client).getTableModel(DynamoDb.class).convert(classToAdd));
+            dynamoClientConfig.getDdbClient().putItem(DYNAMODB_TABLE_NAME,
+                    new DynamoDBMapper(dynamoClientConfig.getDdbClient()).getTableModel(DynamoDb.class).convert(classToAdd));
 
         } catch (AmazonServiceException e) {
 
@@ -28,12 +38,12 @@ public class DynamoDbDao implements StorageDao{
         }
     }
 
-    public void update(AmazonDynamoDB client, String tableName,
+    public void update(String tableName,
                        Map<String, AttributeValue> key,
                        Map<String, AttributeValueUpdate> attributeUpdates) {
         try {
 
-            client.updateItem(tableName, key, attributeUpdates);
+            dynamoClientConfig.getDdbClient().updateItem(tableName, key, attributeUpdates);
 
         } catch (AmazonServiceException e) {
 

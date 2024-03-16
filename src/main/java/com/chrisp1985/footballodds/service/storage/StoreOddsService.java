@@ -16,9 +16,12 @@ public class StoreOddsService {
 
     ObjectMapper objectMapper;
 
+    DynamoDbDao dynamoDbDao;
+
     @Autowired
-    public StoreOddsService(ObjectMapper objectMapper) {
+    public StoreOddsService(ObjectMapper objectMapper, DynamoDbDao dynamoDbDao) {
         this.objectMapper = objectMapper;
+        this.dynamoDbDao = dynamoDbDao;
     }
 
     public void saveToDynamo(List<DynamoDb> dtos) {
@@ -42,6 +45,6 @@ public class StoreOddsService {
     }
 
     private void pushDtoToDynamoDb(DynamoDb dto) {
-        new DynamoDbDao().add(dto, new DynamoClientConfig().getDdbClient());
+        dynamoDbDao.add(dto);
     }
 }

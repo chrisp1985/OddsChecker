@@ -3,6 +3,9 @@ package com.chrisp1985.footballodds.configuration;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 public class DynamoClientConfig {
 
     private static final Regions AWS_REGION = Regions.EU_WEST_2;
