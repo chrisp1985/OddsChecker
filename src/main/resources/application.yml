@@ -1,0 +1,22 @@
+spring:
+  main:
+    web-application-type: none
+    banner_mode: "off"
+    log-startup-info: off
+
+application:
+  broker: "Ladbrokes"
+  urls:
+    ladbrokes:
+      name:
+      base: "https://ss-aka-ori.ladbrokes.com"
+      authority: "ss-aka-ori.ladbrokes.com"
+      origin: "https://sports.ladbrokes.com"
+      referrer: "https://sports.ladbrokes.com"
+    betfair:
+      base: "https://ss-aka-ori.ladbrokes.com"
+      authority: "ss-aka-ori.ladbrokes.com"
+      origin: "https://sports.ladbrokes.com"
+      referrer: "https://sports.ladbrokes.com"
+  dynamo:
+    tablename: "FootballResults_tf"

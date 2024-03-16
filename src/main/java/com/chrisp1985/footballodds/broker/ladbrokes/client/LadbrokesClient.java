@@ -1,0 +1,68 @@
+package com.chrisp1985.footballodds.broker.ladbrokes.client;
+
+import com.chrisp1985.footballodds.client.BrokerClient;
+import com.chrisp1985.footballodds.broker.ladbrokes.model.response.ResponseModel;
+import com.chrisp1985.footballodds.utils.TimeUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
+
+@Component
+@Slf4j
+public class LadbrokesClient implements BrokerClient<ResponseModel> {
+
+    private final ObjectMapper objectMapper;
+    private final RestClient ladbrokesRestClient;
+
+    @Autowired
+    public LadbrokesClient(ObjectMapper objectMapper, RestClient ladbrokesRestClient) {
+        this.objectMapper = objectMapper;
+        this.ladbrokesRestClient = ladbrokesRestClient;
+    }
+
+    public ResponseModel queryOddsEndpoint(String path) {
+
+        var responseLadbrokes = ladbrokesRestClient.get()
+                .uri(path)
+                .retrieve()
+                .toEntity(ResponseModel.class)
+                .getBody();
+
+        try {
+            log.debug("Response Ladbrokes : {}", objectMapper.writeValueAsString(responseLadbrokes));
+        } catch (JsonProcessingException ignored) {
+            log.debug("Response Ladbrokes : {}", responseLadbrokes);
+        }
+        return responseLadbrokes;
+    }
+
+    public ResponseModel getOddsData() {
+        return queryOddsEndpoint(getPathForOddsWithStartXHoursAhead(1));
+    }
+
+    public ResponseModel getEventById(long eventId) {
+        return queryOddsEndpoint(getPathForEventId(eventId));
+    }
+
+    public String getPathForOddsWithStartXHoursAhead(int hoursAheadToStart) {
+        int hoursToQuery = 6;
+
+        String classList = "87,89,88,93,95,90,91,98,97,67,71,74,73,79,76,78,77,82,85,81,80";
+
+//        String classList = "139,136,130,149,144,143,142,140,119,118,115,114,113,112,111,110,127,124,122,120,179,177," +
+//                "176,175,170,740,183,181,159,158,157,154,153,152,151,150,169,166,165,164,162,161,87,89,88,93,95,90,91,98,97,67,71,74,73,79,76,78,77,760,82,85,81,80,106,105,102,101";
+
+        return String.format("/openbet-ssviewer/Drilldown/2" +
+                ".31/EventToOutcomeForClass/%s?responseFormat=json&prune=event&simpleFilter=event" +
+                ".startTime:greaterThanOrEqual:"+ TimeUtils.getDatePlusHours(hoursAheadToStart)+"&simpleFilter=event.startTime:lessThan:"+ TimeUtils.getDatePlusHours(hoursAheadToStart + hoursToQuery)+
+                "&simpleFilter=event.isStarted:isFalse&simpleFilter=event.suspendAtTime:greaterThan:" + TimeUtils.getDatePlusHours(hoursAheadToStart + hoursToQuery), classList);
+    }
+
+    public String getPathForEventId(long eventId) {
+        return String.format("/openbet-ssviewer/Commentary/2.31/CommentaryForEvent/%d" +
+                "?translationLang=en&responseFormat=json&includeUndisplayed=true", eventId);
+    }
+}
