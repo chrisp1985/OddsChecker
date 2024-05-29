@@ -32,6 +32,12 @@ public class DynamoDb {
     public Double draw_odds;
 
     @DynamoDBAttribute
+    public Double double_chance_away_odds;
+
+    @DynamoDBAttribute
+    public Double double_chance_home_odds;
+
+    @DynamoDBAttribute
     public String start_time;
 
     @DynamoDBAttribute
@@ -42,4 +48,7 @@ public class DynamoDb {
 
     @DynamoDBAttribute
     public String broker_name;
+
+    @DynamoDBAttribute
+    public String results_timestamp;
 }

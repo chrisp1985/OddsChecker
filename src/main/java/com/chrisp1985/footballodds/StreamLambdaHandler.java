@@ -22,7 +22,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
             //e.printStackTrace();
             //throw new RuntimeException("Could not initialize Spring Boot application", e);
 
-            // Exception swallowed becaue there's an exception is shown here for:
+            // Exception swallowed because there's an exception is shown here for:
             // org.springframework.context.annotation.AnnotationConfigApplicationContext and
             // org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext
             // are in unnamed module of loader com.amazonaws.services.lambda.runtime.api.client.CustomerClassLoader

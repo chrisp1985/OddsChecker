@@ -33,13 +33,16 @@ public class LadbrokesEventToDynamo {
         return dynamoDbBuilder
                 .event_name(event.event.name.replace("|", ""))
                 .event_id(event.event.id)
-                .home_odds(Double.valueOf(ladbrokesResponseParser.getOdds(event, OutcomeMeaningMinorCode.H)))
-                .draw_odds(Double.valueOf(ladbrokesResponseParser.getOdds(event, OutcomeMeaningMinorCode.D)))
-                .away_odds(Double.valueOf(ladbrokesResponseParser.getOdds(event, OutcomeMeaningMinorCode.A)))
+                .home_odds(Double.valueOf(ladbrokesResponseParser.getMatchResultOdds(event, OutcomeMeaningMinorCode.H)))
+                .draw_odds(Double.valueOf(ladbrokesResponseParser.getMatchResultOdds(event, OutcomeMeaningMinorCode.D)))
+                .away_odds(Double.valueOf(ladbrokesResponseParser.getMatchResultOdds(event, OutcomeMeaningMinorCode.A)))
+                .double_chance_away_odds(Double.valueOf(ladbrokesResponseParser.getAwayTeamDoubleChanceOdds(event)))
+                .double_chance_home_odds(Double.valueOf(ladbrokesResponseParser.getHomeTeamDoubleChanceOdds(event)))
                 .type_name(event.event.typeName.replace("|", ""))
                 .class_name(event.event.className.replace("|", ""))
                 .start_time(event.event.startTime)
                 .broker_name(applicationBroker)
+                .results_timestamp("EMPTY")
                 .build();
     }
 

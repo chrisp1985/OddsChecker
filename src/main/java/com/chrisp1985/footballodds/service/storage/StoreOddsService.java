@@ -5,12 +5,14 @@ import com.chrisp1985.footballodds.broker.ladbrokes.conversion.LadbrokesEventToD
 import com.chrisp1985.footballodds.dao.DynamoDbDao;
 import com.chrisp1985.footballodds.dto.DynamoDb;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
+@Slf4j
 @Service
 public class StoreOddsService {
 
@@ -35,7 +37,7 @@ public class StoreOddsService {
 
         DecimalFormat format = new DecimalFormat("0.#");
 
-        dtos.forEach(dynamoDb -> System.out.printf("%s : %s / %s / %s : %s\n",
+        dtos.forEach(dynamoDb -> log.info("{} : {} / {} / {} : {}\n",
                 dynamoDb.event_name,
                 format.format(dynamoDb.home_odds),
                 format.format(dynamoDb.draw_odds),

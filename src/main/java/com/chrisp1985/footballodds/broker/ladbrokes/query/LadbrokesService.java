@@ -49,26 +49,23 @@ public class LadbrokesService {
 
     private List<EventChild> getValidEvents(ResponseModel response) {
 
-        return ladbrokesResponseParser.getAvailableEvents(response).stream().filter(this::areOddsGoodValue).toList();
+        return ladbrokesResponseParser.getAvailableEvents(response).stream()
+                .filter(this::areOddsGoodValue).toList();
 
     }
 
     public boolean areOddsGoodValue(EventChild event) {
 
         double homeOdds = ladbrokesResponseParser.returnPriceForMeaningCode(
-                OutcomeMeaningMinorCode.H, ladbrokesResponseParser.getMarketChild(event));
+                OutcomeMeaningMinorCode.H, ladbrokesResponseParser.getMarketChild(event, "|Match Result|"));
         double awayOdds = ladbrokesResponseParser.returnPriceForMeaningCode(
-                OutcomeMeaningMinorCode.A, ladbrokesResponseParser.getMarketChild(event));
+                OutcomeMeaningMinorCode.A, ladbrokesResponseParser.getMarketChild(event, "|Match Result|"));
         double drawOdds = ladbrokesResponseParser.returnPriceForMeaningCode(
-                OutcomeMeaningMinorCode.D, ladbrokesResponseParser.getMarketChild(event));
+                OutcomeMeaningMinorCode.D, ladbrokesResponseParser.getMarketChild(event, "|Match Result|"));
 
-        log.debug("Home Odds: {}, Draw Odds: {}, Away Odds: {}", homeOdds, drawOdds, awayOdds);
-        //return (homeOdds + 1) < drawOdds && (homeOdds + 4) < awayOdds;
-        return homeOdds > 1.3 && homeOdds < 1.7;
+        log.info("Home Odds: {}, Draw Odds: {}, Away Odds: {}", homeOdds, drawOdds, awayOdds);
+        return homeOdds > 4 && awayOdds < 1.9;
 
     }
-
-
-
 
 }
